@@ -1,28 +1,38 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
+import { Maths } from '../common/common'
 
-
-defineProps({
-    tile_key: String,
-})
-const selected = ref(true)
-
-function onClick(args: MouseEvent) {
-    selected.value = !selected.value;
-    console.log(selected.value)
+interface Props {
+    tileKey: string,
+    percent: number,
+    openFlg: Boolean,
 }
+const props = defineProps<Props>()
+
+const hitFlg = ref(false)
+watch(() => props.openFlg, () => {
+    if (props.openFlg) {
+        if (Maths.generateRandomBoolean(props.percent)) {
+            hitFlg.value = true
+        }
+    } else {
+        hitFlg.value = false;
+    }
+})
+
 </script>
 
+
 <template>
-    {{ selected }}
-    <div :id="`tile_${tile_key}`" v-bind:class="selected ? 'tile' : 'tile-selected'" @click="onClick">
-        <div :style="{ width: '100%', height: '100%' }">10</div>
+    <div :id="`tile_${tileKey}`"
+        v-bind:class="['tile', ...(openFlg === false || percent === 0 ? [] : hitFlg ? ['tile-black'] : ['tile-white'])]">
+        <div :style="{ width: '100%', height: '100%' }" v-if="percent > 0">{{ percent }}</div>
     </div>
 </template>
 
 <style>
 .tile {
-    background-color: aqua;
+    background-color: rgb(0, 128, 85);
     border: 1px black solid;
     width: 2rem;
     height: 2rem;
@@ -30,13 +40,12 @@ function onClick(args: MouseEvent) {
     padding: 0%;
 }
 
-.tile-selected {
-    background-color: rgb(255, 0, 191);
-    border: 1px black solid;
-    width: 2rem;
-    height: 2rem;
-    margin: 0%;
-    padding: 0%;
+.tile-black {
+    background-color: black;
+}
+
+.tile-white {
+    background-color: white;
 }
 
 .tile:hover {

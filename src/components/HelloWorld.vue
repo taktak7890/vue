@@ -1,53 +1,73 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { reactive, ref, shallowRef, triggerRef } from 'vue'
 import Tile from './Tile.vue'
 
 defineProps({
     msg: String,
 })
 
-const count = ref({ a: 1, b: 2 })
+const openStatus = ref(false)
 
-const tile: boolean[][] = [];
-for (let i = 0; i < 10; i++) {
-    tile.push([])
-    for (let j = 0; j < 10; j++) {
-        tile[i].push(false);
+const tile = ref<number[][]>([]);
+
+for (let i = 0; i < 13; i++) {
+    tile.value.push([])
+    for (let j = 0; j < 13; j++) {
+        tile.value[i].push(0);
     }
 }
+
+const reset = () => {
+    if (!window.confirm('reset?')) {
+        return;
+    }
+    tile.value.forEach(e => {
+        e.forEach((_, i) => {
+            e[i] = 0;
+        })
+    })
+    Counter.reset();
+    openStatus.value = false;
+}
+
+const changeStatus = () => {
+    openStatus.value = !openStatus.value;
+}
+
+class Counter {
+    private static i = 0;
+    private static percentLiist = [10, 30, 70, 90] as const;
+    static getPercent() {
+
+        return (this.i === this.percentLiist.length) ? this.percentLiist[0] : this.percentLiist[this.i];
+    }
+    static getNext() {
+        if (this.i === this.percentLiist.length) {
+            this.reset();
+        }
+        return this.percentLiist[this.i++];
+    }
+    static reset() {
+        this.i = 0;
+    }
+}
+
 </script>
 
 <template>
-    <h1>{{ msg }}</h1>
-
     <div class="card">
-        <button type="button" @click="count.a++">count is {{ { count } }}</button>
-        <p>
-            Edit
-            <code>components/HelloWorld.vue</code> to test HMR
-        </p>
-        <div id="app">
-            <table style="border-collapse: collapse;">
-                <tr v-for="(i, index_i) in tile">
-                    <td v-for="(j, index_j) in i">
-                        <Tile :tile_key="`${index_j}_${index_i}`" v-if="'a'"></Tile>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <div style="font-weight: bold;"><span>next:{{ Counter.getPercent() }}</span></div>
+        <button type="button" @click="changeStatus">{{ openStatus ? '閉じる' : '開く' }}</button>
+        <table style="border-collapse: collapse;">
+            <tr v-for="(i, index_i) in tile">
+                <td v-for="(j, index_j) in i" @click="() => { tile[index_i][index_j] = Counter.getNext() }">
+                    <Tile :tile-key="`${index_j}_${index_i}`" :percent="tile[index_i][index_j]" :open-flg="openStatus">
+                    </Tile>
+                </td>
+            </tr>
+        </table>
+        <button type="button" @click="reset">reset</button>
     </div>
-
-    <p>
-        Check out
-        <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank">create-vue</a>, the official Vue + Vite
-        starter
-    </p>
-    <p>
-        Install
-        <a href="https://github.com/vuejs/language-tools" target="_blank">Volar</a>
-        in your IDE for a better DX
-    </p>
-    <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
 </template>
 
 <style scoped>

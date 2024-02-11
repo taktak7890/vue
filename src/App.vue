@@ -1,5 +1,14 @@
 <script setup lang="tsx">
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from './components/HelloWorld.vue';
+
+const KeyDownOverrideList: KeyboardEvent['key'][] = [
+    'F1'
+]
+window.addEventListener('keydown', (e) => {
+    if (KeyDownOverrideList.includes(e.key)) {
+        e.preventDefault()
+    }
+})
 </script>
 
 <template>
