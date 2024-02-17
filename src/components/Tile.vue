@@ -5,18 +5,18 @@ import { Maths } from '../common/common'
 interface Props {
     tileKey: string,
     percent: number,
-    openFlg: Boolean,
+    isOpen: Boolean,
 }
 const props = defineProps<Props>()
 
-const hitFlg = ref(false)
-watch(() => props.openFlg, () => {
-    if (props.openFlg) {
+const isHit = ref(false)
+watch(() => props.isOpen, () => {
+    if (props.isOpen) {
         if (Maths.generateRandomBoolean(props.percent)) {
-            hitFlg.value = true
+            isHit.value = true
         }
     } else {
-        hitFlg.value = false;
+        isHit.value = false;
     }
 })
 
@@ -24,8 +24,14 @@ watch(() => props.openFlg, () => {
 
 
 <template>
-    <div :id="`tile_${tileKey}`"
-        v-bind:class="['tile', ...(openFlg === false || percent === 0 ? [] : hitFlg ? ['tile-black'] : ['tile-white'])]">
+    <div :id="`tile_${tileKey}`" v-bind:class="((): string[] => {
+        if (isOpen) {
+            return ['tile', ...(isHit ? ['tile-black'] : ['tile-white'])]
+        } else {
+            return percent === 0 ? ['tile'] : ['tile', `tile-${percent}`]
+        }
+    })()
+        ">
         <div :style="{ width: '100%', height: '100%' }" v-if="percent > 0">{{ percent }}</div>
     </div>
 </template>
@@ -38,6 +44,26 @@ watch(() => props.openFlg, () => {
     height: 2rem;
     margin: 0%;
     padding: 0%;
+}
+
+.tile-10 {
+    background-color: #F2F2F2;
+    color: black;
+}
+
+.tile-30 {
+    background-color: #D9D9D9;
+    color: black;
+}
+
+.tile-70 {
+    background-color: #4D4D4D;
+    color: white;
+}
+
+.tile-90 {
+    background-color: #262626;
+    color: white;
 }
 
 .tile-black {

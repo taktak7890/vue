@@ -52,6 +52,12 @@ class Counter {
     }
 }
 
+const onClick_tile = (index_i: number, index_j: number) => {
+    if (tile.value[index_i][index_j] > 0) {
+        return;
+    }
+    tile.value[index_i][index_j] = Counter.getNext()
+}
 </script>
 
 <template>
@@ -60,8 +66,8 @@ class Counter {
         <button type="button" @click="changeStatus">{{ openStatus ? '閉じる' : '開く' }}</button>
         <table style="border-collapse: collapse;">
             <tr v-for="(i, index_i) in tile">
-                <td v-for="(j, index_j) in i" @click="() => { tile[index_i][index_j] = Counter.getNext() }">
-                    <Tile :tile-key="`${index_j}_${index_i}`" :percent="tile[index_i][index_j]" :open-flg="openStatus">
+                <td v-for="(j, index_j) in i" @click="() => onClick_tile(index_i, index_j)">
+                    <Tile :tile-key="`${index_j}_${index_i}`" :percent="tile[index_i][index_j]" :is-open="openStatus">
                     </Tile>
                 </td>
             </tr>
