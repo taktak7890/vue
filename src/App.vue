@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import HelloWorld from './components/HelloWorld.vue';
+import Bord from './components/bord.vue';
 
 const KeyDownOverrideList: KeyboardEvent['key'][] = [
     'F1'
@@ -12,22 +12,9 @@ window.addEventListener('keydown', (e) => {
 </script>
 
 <template>
-    <HelloWorld msg="Vite + Vue" />
+    <div>
+        <Bord :x="15" :y="15" />
+    </div>
 </template>
 
-<style scoped>
-.logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-}
-
-.logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-    filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+<style scoped></style>

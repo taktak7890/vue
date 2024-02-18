@@ -2,17 +2,18 @@
 import { reactive, ref, shallowRef, triggerRef } from 'vue'
 import Tile from './Tile.vue'
 
-defineProps({
-    msg: String,
-})
-
+interface Props {
+    x: number,
+    y: number,
+}
+const props = defineProps<Props>()
 const openStatus = ref(false)
 
 const tile = ref<number[][]>([]);
 
-for (let i = 0; i < 13; i++) {
+for (let i = 0; i < props.x; i++) {
     tile.value.push([])
-    for (let j = 0; j < 13; j++) {
+    for (let j = 0; j < props.y; j++) {
         tile.value[i].push(0);
     }
 }
@@ -21,11 +22,7 @@ const reset = () => {
     if (!window.confirm('reset?')) {
         return;
     }
-    tile.value.forEach(e => {
-        e.forEach((_, i) => {
-            e[i] = 0;
-        })
-    })
+    tile.value.forEach(e => e.forEach((e2, i) => e2 = 0));
     Counter.reset();
     openStatus.value = false;
 }
