@@ -26,7 +26,7 @@ watch(() => props.isOpen, () => {
 <template>
     <div :id="`tile_${tileKey}`" v-bind:class="((): string[] => {
         if (isOpen) {
-            return ['tile', ...(isHit ? ['tile-black'] : ['tile-white'])]
+            return ['tile', ...(percent === 0 ? [] : isHit ? ['tile-black'] : ['tile-white'])]
         } else {
             return percent === 0 ? ['tile'] : ['tile', `tile-${percent}`]
         }
