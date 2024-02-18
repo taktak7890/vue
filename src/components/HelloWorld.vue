@@ -36,7 +36,7 @@ const changeStatus = () => {
 
 class Counter {
     private static i = 0;
-    private static percentLiist = [10, 30, 70, 90] as const;
+    private static percentLiist = [10, 70, 30, 90] as const;
     static getPercent() {
 
         return (this.i === this.percentLiist.length) ? this.percentLiist[0] : this.percentLiist[this.i];
@@ -47,6 +47,13 @@ class Counter {
         }
         return this.percentLiist[this.i++];
     }
+    static setPrev() {
+        if (this.i === 0) {
+            this.i = this.percentLiist.length - 1;
+        } else {
+            this.i--;
+        }
+    }
     static reset() {
         this.i = 0;
     }
@@ -54,6 +61,8 @@ class Counter {
 
 const onClick_tile = (index_i: number, index_j: number) => {
     if (tile.value[index_i][index_j] > 0) {
+        tile.value[index_i][index_j] = 0;
+        Counter.setPrev();
         return;
     }
     tile.value[index_i][index_j] = Counter.getNext()
